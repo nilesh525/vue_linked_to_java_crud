@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REST_BASE_URL = "http://localhost:7000";
+const REST_BASE_URL = "https://springboot-crud-rest.herokuapp.com";
 const REST_BASE_URL_GETALL = `${REST_BASE_URL}/getEmp`;
 class EmployeedataService {
   retrieveAllEmployee() {
