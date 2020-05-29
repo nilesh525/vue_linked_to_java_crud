@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const REST_BASE_URL = "https://springboot-crud-rest.herokuapp.com";
+//const REST_BASE_URL = "http://localhost:7000";
 const REST_BASE_URL_GETALL = `${REST_BASE_URL}/getEmp`;
 class EmployeedataService {
   retrieveAllEmployee() {
@@ -15,12 +16,13 @@ class EmployeedataService {
           }
     });
   }
-  createEmployeeByID(name,desc){
-     // var tempobj=obj;
-    console.log("name="+name+"desc="+desc);
+  createEmployeeByID(name,emailid,desc,pass,source){
     return axios.post(`${REST_BASE_URL}/create`,{
             name:name,
-            desciption:desc
+            desciption:desc,
+            email:emailid,
+            pwd:pass,
+            source:source
     });
   }
   deleteEmployeeByID(id){
@@ -31,12 +33,29 @@ class EmployeedataService {
           }
     });
   }
-  updateEmployeeByID(id,name,desc){
+  updateEmployeeByID(id,name,desc,pass){
     return axios.post(`${REST_BASE_URL}/editEmp`,{
         id:id,
         name:name,
-        desciption:desc
+        desciption:desc,
+        pwd:pass
     }); 
+  }
+  sendMail(frommail,tomail,message){
+    return axios.post(`${REST_BASE_URL}/sendmail`,{
+      fromMail:frommail,
+      toMail:tomail,
+      message:message
+  });
+  }
+  login(uname,pass){//getEmpByEmail
+    var name=uname;
+    return axios.get(`${REST_BASE_URL}/getEmpByEmail`,{
+      params: {
+          email: name,
+          pass:pass
+        }
+  });
   }
 }
 

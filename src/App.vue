@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <WelcomePage/>
+    <div class="container">
+    <router-view/>
+    </div>
   </div>
 </template>
 

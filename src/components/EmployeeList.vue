@@ -1,70 +1,151 @@
 <template>
     <div class="container mainbody">
     <h3>All Employee</h3>
+    <center><h3>{{sentMessage}}</h3></center>
     <div class="container">
       <table class="table">
         <thead>
           <tr>
             <th>Id</th>
             <th>Name</th>
+            <th>Email</th>
             <th>Description</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="employee in EmployeeLst" v-bind:key="employee.id">
             <td>{{employee.id}}</td>
             <td>{{employee.name}}</td>
+            <td>{{employee.email}}</td>
+            <td>{{employee.desciption}}</td>
             <td>
-                <button type="submit" @click="ShowDesc(employee.id)" class="btn-space">show description</button>
-                <button type="submit" @click="HideDesc()" class="btn-space">hide description</button>
+                <button type="submit" @click="ShowDesc(employee.id)" class="btn-space">Send Mail</button>
                 <button type="submit" @click="deleteEMp(employee.id)" class="btn-space">Delete Employee</button>
-                <button type="submit" @click="updateDesc(employee.id)">Update Employee</button>
+                <button type="submit" @click="updateDesc(employee)">Update Employee</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div><br>
-     <div>
-          <button type="submit" @click="ShowCreateBtn()" class="btn-space">Create Employee</button>
-      </div>
-    <div v-if="showdescpage" >
-        <div v-if="Employee.desciption!=null">
-            Desc: {{Employee.desciption}}
-        </div>
-        <div v-if="Employee.desciption==null">
-            Desc: Description not set
-        </div>
+    <div>
+          <button type="submit" class="btn btn-block btn-twitter" @click="ShowCreateBtn()"> Register you friend with us .  </button><br><br>
     </div><br>
+    <form >
+    <center><div v-if="showdescpage" class="mailbox" >
+      
+        To : <input type="text" v-bind="tomail" :value="Employee.email" style="min-width:200px" class="btn-space" required><br><br>
+        From : <input type="text" :value="this.$route.query.employee" style="min-width:200px" class="btn-space" required><br><br>
+        <textarea class="textrea1" v-model="message" placeholder="Enter your message "></textarea><br><br>
+        <button type="submit" @click="sendEmp(Employee.email)" style="min-width:100px" return=false>send</button><br>
+        
+    </div><br></center></form>
     <div v-if="toshowcreate">
-        Name        : <input type="text" v-model="fetchname" name="name" required style="min-width:200px" class="btn-space"><br><br>
-        Description : <input type="text" v-model="fetchdesc" name="desc" required style="min-width:200px " class="btn-space"><br><br>
-        <button type="submit" @click="createEmp()" style="min-width:200px ">create</button><br>
+        <div class="card " style="background-color: bisque">
+        <center><article  style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Add user</h4>
+            <p class="text-center">Get started ...</p>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                </div>
+                <input name="" class="form-control" placeholder="Full name" type="text" v-model="name">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                </div>
+                <input name="" class="form-control" placeholder="Email address" type="email" v-model="email">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control" v-model="desc">
+                    <option selected=""> Developer </option>
+                    <option>Manager</option>
+                    <option>Support</option>
+                    <option>Tester</option>
+                    <option>BA</option>
+                </select>
+            </div> <!-- form-group end.// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Create password" type="password" v-model="pass">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Repeat password" type="password" v-model="cpass">
+            </div> <!-- form-group// -->                                      
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block" @click="createEmp()()" :disabled="pass!=cpass"> Create Account  </button>
+                <div v-if="pass!=cpass"><h6 style="color:red">password did not macheed</h6></div>
+            </div> <!-- form-group// -->                                                              
+        </article></center>
+    </div>
     </div>
     <div v-if="toshowedit">
-        Id : {{editempid}} <br>
-        Name        : <input type="text" v-model="fetchname" name="name" required style="min-width:200px" class="btn-space"><br><br>
-        Description : <input type="text" v-model="fetchdesc" name="desc" required style="min-width:200px " class="btn-space"><br><br>
-        <button type="submit" @click="updateEmp()" style="min-width:200px ">update</button><br>
+        <center><article  style="max-width: 400px;">
+            <p class="text-center">Employee Id : {{editempid.id}}</p>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                </div>
+                <input name="" class="form-control" placeholder="Full name" type="text" v-model="nameedit">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                </div>
+                <input name="" class="form-control" v-bind:value="editempid.email" type="email" disabled>
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-building"></i> </span>
+                </div>
+                <select class="form-control" v-model="descedit">
+                    <option selected=""> Developer </option>
+                    <option>Manager</option>
+                    <option>Support</option>
+                    <option>Tester</option>
+                    <option>BA</option>
+                </select>
+            </div> <!-- form-group end.// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Create password" type="password" v-model="passedit">
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input class="form-control" placeholder="Repeat password" type="password" v-model="cpassedit">
+            </div> <!-- form-group// -->                                      
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block" @click="updateEmp()" :disabled="pass!=cpass"> Create Account  </button>
+                <div v-if="passedit!=cpassedit"><h6 style="color:red">password did not macheed</h6></div>
+            </div> <!-- form-group// -->                                                              
+        </article></center>
     </div>
   </div>
 </template>
 
 <script>
 import EmployeedataService from '@/service/EmployeedataService.js'
+//import router from "@/router/index.js";
 export default {
     name:"EmployeeList",
     data() {
     return {
-      EmployeeLst: "",
-      showdescpage:false,
-      Employee:"",
-      toshowcreate:false,
-      createRes:"",
-      fetchname:"",
-      fetchdesc:"",
-      deletedata:"",
-      toshowedit:false,
-      editempid:""
+      EmployeeLst: "",refreshpage:true,showdescpage:false,Employee:"",toshowcreate:false,createRes:"",fetchname:"",
+      fetchdesc:"",deletedata:"",toshowedit:false,editempid:"",frommail:"",message:"",sentMessage:"",
+      name:'',email:'',desc:'Developer',pass:'',cpass:'',passedit:"",descedit:"Developer",nameedit:""
     };
   },
   methods: {
@@ -75,26 +156,35 @@ export default {
         });
     },
     ShowDesc:function(des){
-        console.log("inside show desc")
-        this.showdescpage=false;
-        this.showdescpage=true;
+        if(this.showdescpage==true){
+          this.showdescpage=false
+        }else{
+          this.showdescpage=true
+        }
         EmployeedataService.retrieveEmployeeByID(des)
         .then(response => {
             this.Employee=response.data;
+            console.log(this.Employee);
         });
+         
     },
     HideDesc:function(){
         this.showdescpage=false;
     },
     ShowCreateBtn:function(){
-        this.toshowcreate=true;
+      this.toshowedit=false
+        if(this.toshowcreate){
+          this.toshowcreate=false;
+        }else{
+          this.toshowcreate=true;
+        }
     },
     createEmp:function(){
-        EmployeedataService.createEmployeeByID(this.fetchname,this.fetchdesc)
+      this.toshowcreate=false
+        EmployeedataService.createEmployeeByID(this.name,this.email,this.descedit,this.pass,"general")
         .then(response => {
             this.createRes=response.data;
-        }).then(location.reload());
-        
+        }).then(location.reload());      
     },
     deleteEMp:function(des){
         EmployeedataService.deleteEmployeeByID(des)
@@ -103,17 +193,30 @@ export default {
         }).then(location.reload());
     },
     updateDesc:function(des){
-        this.editempid=des;
-        this.toshowedit=true; 
+      this.editempid=des;
+      this.toshowcreate=false
+      if(this.toshowedit==true){
+        this.toshowedit=false;
+      }else{
+        this.toshowedit=true;
+      }
     },
     updateEmp:function(){
-        EmployeedataService.updateEmployeeByID(this.editempid,this.fetchname,this.fetchdesc)
+        EmployeedataService.updateEmployeeByID(this.editempid.id,this.nameedit,this.descedit,this.passedit)
         .then(response => {
             this.createRes=response.data;
         }).then(location.reload());
+    },
+    sendEmp:function(tomail){
+      EmployeedataService.sendMail(this.frommail,tomail,this.message)
+        .then(response => {
+           this.sentMessage=response.data;
+        });//premmohanlal525@gmail.com
+        this.showdescpage=false;
     }
   },
   created() {
+    this.frommail=this.$route.query.employee
     this.refreshEmplyee();
   }
 }
@@ -128,7 +231,7 @@ table {
 
 th {
   height: 50px;
-  text-align: left;
+  text-align: center;
   border: 1px solid black;
 }
 td{
@@ -179,21 +282,6 @@ form {
   -ms-user-select: none;
   user-select: none;
 }
-.value-button:hover {
-  cursor: pointer;
-}
-form #decrease {
-  margin-right: -4px;
-  border-radius: 8px 0 0 8px;
-}
-form #increase {
-  margin-left: -4px;
-  border-radius: 0 8px 8px 0;
-}
-form #input-wrap {
-  margin: 0px;
-  padding: 0px;
-}
 input#number {
   text-align: center;
   border: none;
@@ -208,57 +296,12 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-.qwe{
-    max-width : 500px;
-    word-wrap: break-word;
-    position: relative; 
-    margin: 0px 0px 0px 350px
-}
+
 .btn-space {
     margin-right: 5px;
 }
-.qty .count {
-    color: #000;
-    display: inline-block;
-    vertical-align: top;
-    font-size: 25px;
-    font-weight: 700;
-    line-height: 30px;
-    padding: 0 2px
-    ;min-width: 35px;
-    text-align: center;
-}
-.qty .plus {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 30px;
-    height: 30px;
-    font: 30px/1 Arial,sans-serif;
-    text-align: center;
-    border-radius: 50%;
-    }
-.qty .minus {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 30px;
-    height: 30px;
-    font: 30px/1 Arial,sans-serif;
-    text-align: center;
-    border-radius: 50%;
-    background-clip: padding-box;
-}
 div {
     text-align: center;
-}
-.minus:hover{
-    background-color: #717fe0 !important;
-}
-.plus:hover{
-    background-color: #717fe0 !important;
 }
 /*Prevent text selection*/
 span{
@@ -270,12 +313,29 @@ input{
     border: 0;
     width: 2%;
 }
-nput::-webkit-outer-spin-button,
+input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 input:disabled{
     background-color:white;
+}
+.mailbox{
+  background-color:rgb(235, 158, 177);
+  min-height: 200px;
+  min-width: 400px;
+  padding: 20px;
+  text-align: left;
+}
+.textrea1{
+  background-color:white;
+  min-height: 100px;
+  min-width: 360px;
+  text-align: left;
+}
+.btn-twitter {
+    background-color: #42AEEC;
+    color: #fff;
 }
 </style>
