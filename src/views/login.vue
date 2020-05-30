@@ -53,7 +53,7 @@ export default {
             })
           }).catch(function(error){
             console.log(error);
-            alert("Not found ");
+            alert("Incorrect Password ");
           }
           )
           this.uname="";this.pass="";this.Employee=""
