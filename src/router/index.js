@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import register from '../views/register.vue'
 import login from '../views/login.vue'
 import employee from '@/components/EmployeeList.vue'
-
+import forgotpass from "@/views/forgotpass.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -34,12 +34,17 @@ const routes = [
     meta:{
       log:"logout"
     },
-    // beforeRouteLeave(to, from, next) {
-    //    window.onpopstate =function(event){
-
-    //   }
-    // }
-  }
+  },
+  {
+    path:'/forgotpass',
+    name:'forgotpass',
+    component:forgotpass
+  },
+  // {
+  //   path:'/hitfacebook',
+  //   name:'hitfacebook',
+  //   component:employee
+  // }
 ]
 
 const router = new VueRouter({

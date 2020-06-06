@@ -27,7 +27,8 @@
             <p class="text-center">Get started ...</p>
             <p>
                 <a href="/login" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Login gmail</a>
-                <a href="/login" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>Login via facebook</a>
+                <!-- <router-link to="/hitfacebook" class="btn btn-block btn-twitter" > <i class="fab fa-facebook-f"></i>Login via facebook</router-link> -->
+                <button type="submit" class="btn btn-block btn-twitter" @click="hitfacebook()"></button>
             </p>
             <p class="divider-text">
                 <span class="bg-light">OR Register as guesr</span>
@@ -120,6 +121,11 @@ export default {
         enableregisterpage(){
             this.showmainpage=false;
             this.showregister=true;
+        },
+        hitfacebook(){
+            EmployeedataService.facebooklogin().then(response=>{
+                alert(response.data)
+            });           
         }
     },
     created:{

@@ -12,12 +12,12 @@
 
                 <!-- Login Form -->
                 <input type="text" id="login" class="fadeIn second" name="login" placeholder="email" v-model="uname">
-                <input type="text" id="password" class="fadeIn third" name="login" placeholder="password" v-model="pass">
+                <input type="password" id="password" class="fadeIn third" name="login" placeholder="password" v-model="pass" style="width:380px;text-align:center">
                 <input type="submit" class="fadeIn fourth" value="Log In" @click="login()">
 
                 <!-- Remind Passowrd -->
                 <div id="formFooter">
-                <a class="underlineHover" href="#">Forgot Password?</a>
+                <a class="underlineHover" href="/forgotpass">Forgot Password?</a>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@ export default {
             })
           }).catch(function(error){
             console.log(error);
-            alert("Incorrect Password ");
+            alert("Incorrect ID or Password ");
           }
           )
           this.uname="";this.pass="";this.Employee=""
