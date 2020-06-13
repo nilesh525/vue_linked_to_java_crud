@@ -1,14 +1,18 @@
 <template>
     <div class="hello">
+
         <nav class="navbar navbar-expand-lg navbar-dark " id="nav">
             <div class="container">
                 <div v-if="this.$route.query.employee!=null"><router-link to="/" class="navbar-brand" >{{this.$route.query.employee}}</router-link></div>
                 <div v-else><router-link to="/" class="navbar-brand" >Home</router-link></div>
-                <!-- <router-link to="/" class="navbar-brand" >Home{{emp}}</router-link> -->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <router-link to="/" class="nav-link">Home</router-link>
+                        <!-- <router-link to="/" class="nav-link">Home</router-link> -->
+                        <div v-if="this.$route.query.pic!=null">
+                        <a class="navbar-brand" href="#">
+                            <img :src="this.$route.query.pic" alt="abc" style="width:40px;">
+                        </a></div>
                     </li>
                     <li class="nav-item">
                         <div v-if="this.$route.query.employee!=null"><router-link to="/logout" class="nav-link" >logout</router-link></div>

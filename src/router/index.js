@@ -4,6 +4,7 @@ import register from '../views/register.vue'
 import login from '../views/login.vue'
 import employee from '@/components/EmployeeList.vue'
 import forgotpass from "@/views/forgotpass.vue";
+import hitfacebook from "@/views/hitfacebook.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -40,11 +41,11 @@ const routes = [
     name:'forgotpass',
     component:forgotpass
   },
-  // {
-  //   path:'/hitfacebook',
-  //   name:'hitfacebook',
-  //   component:employee
-  // }
+  {
+    path:'/hitfacebook',
+    name:'hitfacebook',
+    component:hitfacebook
+  }
 ]
 
 const router = new VueRouter({

@@ -60,9 +60,9 @@ class EmployeedataService {
   sendforget(mail){
     return axios.post(`${REST_BASE_URL}/forgotpass/${mail}`,{});
   }
-  facebooklogin(){
-    return axios.post(`${REST_BASE_URL}/user`,{});
-  }
+  // facebooklogin(){
+  //   return axios.post(`${REST_BASE_URL}/user`,{});
+  // }
 }
 
 

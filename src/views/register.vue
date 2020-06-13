@@ -26,9 +26,14 @@
             <h4 class="card-title mt-3 text-center">Create Account</h4>
             <p class="text-center">Get started ...</p>
             <p>
-                <a href="/login" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Login gmail</a>
-                <!-- <router-link to="/hitfacebook" class="btn btn-block btn-twitter" > <i class="fab fa-facebook-f"></i>Login via facebook</router-link> -->
-                <button type="submit" class="btn btn-block btn-twitter" @click="hitfacebook()"></button>
+                <a href="/login" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Login gmail</a><br>
+                <facebook-login class="button"
+                    appId="254941092607938"
+                    @login="onLogin"
+                    @logout="onLogout"
+                    @get-initial-status="getUserData"
+                    @sdk-loaded="sdkLoaded">                                                        
+                </facebook-login>
             </p>
             <p class="divider-text">
                 <span class="bg-light">OR Register as guesr</span>
@@ -78,15 +83,35 @@
     <div v-if="toshowlogin">
         <login/>
     </div>
+     <div v-if="isConnected" class="information">
+     <center> <h1>My Facebook Information</h1></center>
+      <div class="well">
+        <div class="list-item">
+          <img :src="picture">
+        </div>
+        <div class="list-item">
+          <i>{{fbname}}</i>
+        </div>
+        <div class="list-item">
+          <i>{{fbemail}}</i>
+        </div>
+        <div class="list-item">
+          <i>{{personalID}}</i>
+        </div>
+         <button type="submit" class="btn btn-primary btn-block" @click="confirmacc()"> continue </button>
+      </div>
+    </div>
 </div> 
 </template>
 <script>
 import login from "@/views/login.vue";
 import EmployeedataService from '@/service/EmployeedataService.js'
-//import router from "@/router/index.js";
+import facebookLogin from 'facebook-login-vuejs'
+import employeedataService from "@/service/EmployeedataService.js";
+import router from "@/router/index.js";
 export default {
     components :{
-        login
+        login,facebookLogin
     },
     data(){
         return{
@@ -98,7 +123,13 @@ export default {
             showregistersuccess:false,
             showregisterfail:false,
             showregisterfailonpass:false,
-            showregister:false,mssage:"",toshowlogin:false,showmainpage:true
+            showregister:false,mssage:"",toshowlogin:false,showmainpage:true,
+            isConnected: false,
+            fbname: '',
+            fbemail: '',
+            personalID: '',
+            picture: '',
+            FB: undefined
         }
     },
     methods:{
@@ -122,10 +153,41 @@ export default {
             this.showmainpage=false;
             this.showregister=true;
         },
-        hitfacebook(){
-            EmployeedataService.facebooklogin().then(response=>{
-                alert(response.data)
-            });           
+        getUserData() {
+            this.FB.api('/me', 'GET', { fields: 'id,name,email,picture' },
+            user => {
+                this.personalID = user.id;
+                this.fbemail = user.email;
+                this.fbname = user.name;
+                this.picture = user.picture.data.url;
+            }
+            )
+        },
+        sdkLoaded(payload) {
+            this.isConnected = payload.isConnected
+            this.FB = payload.FB
+            if (this.isConnected) this.getUserData()
+        },
+        onLogin() {
+            this.isConnected = true
+            this.showregister=false
+            this.getUserData()
+        },
+        onLogout() {
+            this.isConnected = false;
+        },
+        confirmacc(){
+             employeedataService.createEmployeeByID(this.fbname,this.fbemail,"","facebook","facebook").then(response=>{
+            this.Employee=response.data;
+            router.push({
+              path:'/employees',
+              query: { employee: this.fbname ,pic:this.picture},
+              meta:{name:this.Employee.name,pic:this.picture}
+            })
+          }).catch(function(error){
+            alert("Incorrect ID or Password :"+error);
+          }
+          )
         }
     },
     created:{
@@ -162,5 +224,40 @@ export default {
 .btn-twitter {
     background-color: #42AEEC;
     color: #fff;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start
+}
+.information {
+  margin-top: 100px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.well {
+  background-color: rgb(191, 238, 229);
+  margin: auto;
+  padding: 50px 50px;
+  ;
+  border-radius: 20px;
+  /* display:inline-block; */
+}
+.login {
+  width: 200px;
+  margin: auto;
+}
+.list-item:first-child {
+  margin: 0;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.button {
+  margin: auto;
 }
 </style>
